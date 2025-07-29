@@ -49,7 +49,7 @@ Analyze the following message:
 
 Return your answer in this format (must follow the structure):
 Response: <clear and brief response>
-Severity: <Low / Medium / High>
+Severity: <Low / Moderate / High, Critical>
 Recommended Action: <what should the user do?>
 """
 
