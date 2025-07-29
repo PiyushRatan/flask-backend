@@ -1,46 +1,71 @@
-from flask import Flask, jsonify, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
+from dotenv import load_dotenv
+import google.generativeai as genai
 import os
 
+load_dotenv()
+
 app = Flask(__name__)
-CORS(app)  # Allows frontend (like GitHub Pages) to access this backend
+CORS(app)
 
-# Route: Home
-@app.route('/')
-def home():
-    return "🔥 Hello from Render backend!"
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+model = genai.GenerativeModel('gemini-pro')
 
-# Route: About
-@app.route('/about')
-def about():
-    return "This is a Flask backend hosted on Render."
-
-# Route: JSON response
-@app.route('/json')
-def json_data():
-    data = {
-        "name": "Piyush",
-        "status": "Backend Connected",
-        "platform": "Render"
-    }
-    return jsonify(data)
-
-# Route: Handle POST request (like a chatbot or form)
 @app.route('/ask', methods=['POST'])
 def ask():
     try:
-        user_input = request.json.get('question', '').strip()
-        if not user_input:
-            return jsonify({"error": "No question provided"}), 400
+        data = request.get_json()
+        question = data.get("question", "").strip()
 
-        # Simulate AI response (you can replace this later with Gemini/OpenAI)
-        response = f"You asked: '{user_input}' — and I heard you loud and clear 🔥"
-        return jsonify({"answer": response})
-    
+        if not question:
+            return jsonify({
+                "answer": "Input is empty.",
+                "severity": "Unknown",
+                "action": "Please enter a message to analyze."
+            })
+
+        # Preprompt
+        prompt = f"""
+You are a scam and phishing detector assistant.
+
+Analyze the following message:
+"{question}"
+
+Return your answer in this format (must follow the structure):
+Response: <clear and brief response>
+Severity: <Low / Medium / High>
+Recommended Action: <what should the user do?>
+"""
+
+        response = model.generate_content(prompt)
+        text = response.text.strip()
+
+        # Parse Gemini output
+        lines = text.split('\n')
+        result = {
+            "answer": "Not Available",
+            "severity": "Unknown",
+            "action": "No recommendation."
+        }
+
+        for line in lines:
+            if line.lower().startswith("response:"):
+                result["answer"] = line.split(":", 1)[1].strip()
+            elif line.lower().startswith("severity:"):
+                result["severity"] = line.split(":", 1)[1].strip()
+            elif line.lower().startswith("recommended action:"):
+                result["action"] = line.split(":", 1)[1].strip()
+
+        return jsonify(result)
+
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print("Error:", e)
+        return jsonify({
+            "answer": "Something went wrong while processing your request.",
+            "severity": "Unknown",
+            "action": "Try again later or contact support."
+        })
 
-# Required for Render hosting
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+if __name__ == "__main__":
+    app.run(debug=True)
