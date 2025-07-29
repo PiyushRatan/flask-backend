@@ -1,28 +1,25 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-# from dotenv import load_dotenv # Commented out as per request
+# from dotenv import load_dotenv 
 import google.generativeai as genai
 import os
 
-# load_dotenv() # Commented out as per request
+# load_dotenv() 
 
 app = Flask(__name__)
 CORS(app)
 
 # Replace "YOUR_ACTUAL_GEMINI_API_KEY_HERE" with your real API key
-# You can find your key at [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
 GEMINI_API_KEY = "AIzaSyCgwBmkDlSoJm5DgsxgnwtyRAMNxGir2D0"
 # ----------------------------------------------------------------------------
 
 genai.configure(api_key=GEMINI_API_KEY) # Using the hardcoded key
-# Using 'gemini-2.0-flash' as it was suggested by your test script and is often more available
 model = genai.GenerativeModel('gemini-2.0-flash')
 
 @app.route("/health", methods=["GET"])
 def health():
     return jsonify({"status": "ok", "message": "Backend is running!"}), 200
 
-# Default root endpoint returns a simple HTML welcome message
 @app.route("/", methods=["GET"])
 def index():
     return "<h2>Welcome to the Cyber Alert Flask Backend!<br>Use <code>/ask</code> to POST scam/phishing messages for analysis.<br>Status: <span style='color:green;'>Running</span></h2>", 200
@@ -34,9 +31,6 @@ def ask():
         question = data.get("question", "").strip()
         language = data.get("language", "").strip()
 
-
-        # Print received data for debugging
-        print(f"[DEBUG] /ask received: question='{question}', language='{language}'")
 
         if not question:
             return jsonify({
