@@ -32,6 +32,7 @@ def ask():
     try:
         data = request.get_json()
         question = data.get("question", "").strip()
+        language = data.get("language", "English").strip()
 
         if not question:
             return jsonify({
@@ -43,10 +44,9 @@ def ask():
         # Preprompt for the scam/phishing detector
         prompt = f"""
 You are a scam and phishing detection assistant trained to identify deceptive,
-unethical, fraudulent, or harmful messages.(take severity sincerely so label it sincerely if life threatening then critical always and other cases with thier corresponding severity.)
+unethical, fraudulent, or harmful messages. (Take severity sincerely: if life threatening then label as Critical, otherwise use the appropriate severity.)
 
-Analyze the following message:
-
+Analyze the following message (in {language} language):
 "{question}"
 
 Respond strictly in this structured format:
