@@ -22,6 +22,11 @@ model = genai.GenerativeModel('gemini-2.0-flash')
 def health():
     return jsonify({"status": "ok", "message": "Backend is running!"}), 200
 
+# Default root endpoint returns a simple HTML welcome message
+@app.route("/", methods=["GET"])
+def index():
+    return "<h2>Welcome to the Cyber Alert Flask Backend!<br>Use <code>/ask</code> to POST scam/phishing messages for analysis.<br>Status: <span style='color:green;'>Running</span></h2>", 200
+
 @app.route('/ask', methods=['POST'])
 def ask():
     try:
