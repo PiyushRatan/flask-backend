@@ -11,7 +11,7 @@ CORS(app)
 
 # Replace "YOUR_ACTUAL_GEMINI_API_KEY_HERE" with your real API key
 # You can find your key at [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
-GEMINI_API_KEY = "YOUR_ACTUAL_GEMINI_API_KEY_HERE"
+GEMINI_API_KEY = "AIzaSyCgwBmkDlSoJm5DgsxgnwtyRAMNxGir2D0"
 # ----------------------------------------------------------------------------
 
 genai.configure(api_key=GEMINI_API_KEY) # Using the hardcoded key
