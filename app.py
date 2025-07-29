@@ -1,19 +1,26 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from dotenv import load_dotenv
+# from dotenv import load_dotenv # Commented out as per request
 import google.generativeai as genai
 import os
 
-load_dotenv()
+# load_dotenv() # Commented out as per request
 
 app = Flask(__name__)
 CORS(app)
+
+# Replace "YOUR_ACTUAL_GEMINI_API_KEY_HERE" with your real API key
+# You can find your key at [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
+GEMINI_API_KEY = "YOUR_ACTUAL_GEMINI_API_KEY_HERE"
+# ----------------------------------------------------------------------------
+
+genai.configure(api_key=GEMINI_API_KEY) # Using the hardcoded key
+# Using 'gemini-2.0-flash' as it was suggested by your test script and is often more available
+model = genai.GenerativeModel('gemini-2.0-flash')
+
 @app.route("/health", methods=["GET"])
 def health():
     return jsonify({"status": "ok", "message": "Backend is running!"}), 200
-
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel('gemini-pro')
 
 @app.route('/ask', methods=['POST'])
 def ask():
@@ -28,7 +35,7 @@ def ask():
                 "action": "Please enter a message to analyze."
             })
 
-        # Preprompt
+        # Preprompt for the scam/phishing detector
         prompt = f"""
 You are a scam and phishing detector assistant.
 
@@ -71,5 +78,6 @@ Recommended Action: <what should the user do?>
         })
 
 if __name__ == "__main__":
+    # Use the PORT environment variable for Render deployment, default to 5000 for local
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
