@@ -86,6 +86,11 @@ Recommended Action: <specific advice for the user (e.g., ignore, report, block, 
             "language": language.capitalize()
         })
 
+@app.route("/language", methods=["GET"])
+def index():
+    language = request.args.get("language", "").strip()
+    return f"YOur Language is {language}", 200
+
 if __name__ == "__main__":
     # Use the PORT environment variable for Render deployment, default to 5000 for local
     port = int(os.environ.get("PORT", 5000))
