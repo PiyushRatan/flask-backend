@@ -34,6 +34,10 @@ def ask():
         question = data.get("question", "").strip()
         language = data.get("language", "").strip()
 
+
+        # Print received data for debugging
+        print(f"[DEBUG] /ask received: question='{question}', language='{language}'")
+
         if not question:
             return jsonify({
                 "answer": "Input is empty.",
@@ -87,9 +91,9 @@ Recommended Action: <specific advice for the user (e.g., ignore, report, block, 
         })
 
 @app.route("/language", methods=["GET"])
-def index():
+def language_info():
     language = request.args.get("language", "").strip()
-    return f"YOur Language is {language}", 200
+    return f"Your Language is {language}", 200
 
 if __name__ == "__main__":
     # Use the PORT environment variable for Render deployment, default to 5000 for local
