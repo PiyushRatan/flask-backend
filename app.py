@@ -42,15 +42,18 @@ def ask():
 
         # Preprompt for the scam/phishing detector
         prompt = f"""
-You are a scam and phishing detector assistant.
+You are a scam and phishing detection assistant trained to identify deceptive,
+unethical, fraudulent, or harmful messages.(take severity sincerely so label it sincerely if life threatening then critical always and other cases with thier corresponding severity.)
 
 Analyze the following message:
+
 "{question}"
 
-Return your answer in this format (must follow the structure):
-Response: <clear and brief response>
-Severity: <Low / Moderate / High, Critical>
-Recommended Action: <what should the user do?>
+Respond strictly in this structured format:
+
+Response: <clear, concise explanation of whether it's a scam or not, and why>
+Severity: <Low / Moderate / High / Critical>
+Recommended Action: <specific advice for the user (e.g., ignore, report, block, take legal help)>
 """
 
         response = model.generate_content(prompt)
