@@ -32,7 +32,7 @@ def ask():
     try:
         data = request.get_json()
         question = data.get("question", "").strip()
-        language = data.get("language", "English").strip()
+        language = data.get("language", "").strip()
 
         if not question:
             return jsonify({
@@ -49,7 +49,7 @@ unethical, fraudulent, or harmful messages. (Take severity sincerely: if life th
 Analyze the following message (in {language} language):
 "{question}"
 
-Respond strictly in this structured format:
+Respond strictly in this structured format, and reply in {language}:
 
 Response: <clear, concise explanation of whether it's a scam or not, and why>
 Severity: <Low / Moderate / High / Critical>
@@ -82,7 +82,8 @@ Recommended Action: <specific advice for the user (e.g., ignore, report, block, 
         return jsonify({
             "answer": "Something went wrong while processing your request.",
             "severity": "Unknown",
-            "action": "Try again later or contact support."
+            "action": "Try again later or contact support.",
+            "language": language.capitalize()
         })
 
 if __name__ == "__main__":
