@@ -8,6 +8,9 @@ load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
+@app.route("/health", methods=["GET"])
+def health():
+    return jsonify({"status": "ok", "message": "Backend is running!"}), 200
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 model = genai.GenerativeModel('gemini-pro')
