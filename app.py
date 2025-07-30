@@ -1,17 +1,19 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-# from dotenv import load_dotenv 
+from dotenv import load_dotenv
 import google.generativeai as genai
 import os
 
-# load_dotenv() 
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-# Replace "YOUR_ACTUAL_GEMINI_API_KEY_HERE" with your real API key
-GEMINI_API_KEY = "AIzaSyCgwBmkDlSoJm5DgsxgnwtyRAMNxGir2D0"
-# ----------------------------------------------------------------------------
+
+# Get Gemini API key from environment variable (set in Render or .env file)
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+if not GEMINI_API_KEY:
+    raise RuntimeError("GEMINI_API_KEY environment variable not set.Oopsie heheehehee 😅😄😅")
 
 genai.configure(api_key=GEMINI_API_KEY) # Using the hardcoded key
 model = genai.GenerativeModel('gemini-2.0-flash')
