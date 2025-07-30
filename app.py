@@ -49,7 +49,7 @@ unethical, fraudulent, or harmful messages. (Take severity sincerely: if life th
 Analyze the following message (in {language} language):
 "{question}"
 
-Respond strictly in this structured format, and reply in {language}:
+Respond strictly in this structured format, and reply in {language} severity should be in english(must):
 
 Response: <clear, concise explanation of whether it's a scam or not, and why>
 Severity: <Low / Moderate / High / Critical>
